@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0 0% 98%);
+  --foreground: hsl(210 11% 13%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(210 11% 13%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(210 11% 13%);
+  --primary: hsl(217 89% 61%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(142 76% 41%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(0 0% 96%);
+  --muted-foreground: hsl(210 11% 60%);
+  --accent: hsl(4 90% 58%);
+  --accent-foreground: hsl(0 0% 100%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(214 32% 91%);
+  --input: hsl(214 32% 91%);
+  --ring: hsl(217 89% 61%);
+  --chart-1: hsl(217 89% 61%);
+  --chart-2: hsl(142 76% 41%);
+  --chart-3: hsl(4 90% 58%);
+  --chart-4: hsl(147 78% 42%);
+  --chart-5: hsl(341 75% 51%);
+  --sidebar: hsl(0 0% 100%);
+  --sidebar-foreground: hsl(210 11% 13%);
+  --sidebar-primary: hsl(217 89% 61%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(214 32% 91%);
+  --sidebar-accent-foreground: hsl(217 89% 61%);
+  --sidebar-border: hsl(214 32% 91%);
+  --sidebar-ring: hsl(217 89% 61%);
+  --font-sans: 'Roboto', 'Inter', sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: 'Fira Code', monospace;
+  --radius: 0.5rem;
+  --shadow-2xs: 0px 1px 2px 0px hsl(217 89% 61% / 0.05);
+  --shadow-xs: 0px 1px 2px 0px hsl(217 89% 61% / 0.10);
+  --shadow-sm: 0px 1px 3px 0px hsl(217 89% 61% / 0.10), 0px 1px 2px 0px hsl(217 89% 61% / 0.06);
+  --shadow: 0px 1px 3px 0px hsl(217 89% 61% / 0.10), 0px 1px 2px 0px hsl(217 89% 61% / 0.06);
+  --shadow-md: 0px 4px 6px -1px hsl(217 89% 61% / 0.10), 0px 2px 4px -1px hsl(217 89% 61% / 0.06);
+  --shadow-lg: 0px 10px 15px -3px hsl(217 89% 61% / 0.10), 0px 4px 6px -2px hsl(217 89% 61% / 0.05);
+  --shadow-xl: 0px 20px 25px -5px hsl(217 89% 61% / 0.10), 0px 10px 10px -5px hsl(217 89% 61% / 0.04);
+  --shadow-2xl: 0px 25px 50px -12px hsl(217 89% 61% / 0.25);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: hsl(210 11% 13%);
+  --foreground: hsl(0 0% 98%);
+  --card: hsl(210 11% 15%);
+  --card-foreground: hsl(0 0% 98%);
+  --popover: hsl(210 11% 15%);
+  --popover-foreground: hsl(0 0% 98%);
+  --primary: hsl(217 89% 61%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(142 76% 41%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(210 11% 20%);
+  --muted-foreground: hsl(210 11% 60%);
+  --accent: hsl(4 90% 58%);
+  --accent-foreground: hsl(0 0% 100%);
+  --destructive: hsl(0 84% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(210 11% 20%);
+  --input: hsl(210 11% 20%);
+  --ring: hsl(217 89% 61%);
+  --sidebar: hsl(210 11% 15%);
+  --sidebar-foreground: hsl(0 0% 98%);
+  --sidebar-primary: hsl(217 89% 61%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(210 11% 20%);
+  --sidebar-accent-foreground: hsl(217 89% 61%);
+  --sidebar-border: hsl(210 11% 20%);
+  --sidebar-ring: hsl(217 89% 61%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Leaflet map custom styles */
+.leaflet-container {
+  font-family: var(--font-sans);
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius);
+}
+
+.leaflet-popup-content {
+  font-family: var(--font-sans);
+}
+
+/* Custom marker styles */
+.center-marker,
+.place-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Loading animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Hover effects for place cards */
+.place-card {
+  transition: all 0.2s ease-in-out;
+}
+
+.place-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* Auth page gradient background */
+.auth-page {
+  background: linear-gradient(135deg, hsl(217 89% 61%) 0%, hsl(142 76% 41%) 100%);
+  min-height: 100vh;
+}
