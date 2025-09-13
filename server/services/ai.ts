@@ -14,12 +14,18 @@ export class AIService {
 
   constructor() {
     this.apiKey = config.openRouterApiKey;
-    if (!this.apiKey) {
-      throw new Error('OpenRouter API key is required');
-    }
+    // Don't throw error for missing API key - handle gracefully instead
   }
 
   async categorizePlace(place: Place): Promise<{ category: string; tags: string[] }> {
+    // If no API key is available, skip AI categorization
+    if (!this.apiKey || this.apiKey.startsWith('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')) {
+      return {
+        category: place.category || 'Other',
+        tags: []
+      };
+    }
+
     const prompt = `
 Analyze this place and provide a more specific category and relevant tags:
 

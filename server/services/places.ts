@@ -5,6 +5,23 @@ import { Place } from '@shared/schema';
 export class PlacesService {
   constructor() {}
 
+  // Map frontend categories to valid OpenTripMap kinds
+  private mapCategoryToOtmKinds(category: string): string {
+    const categoryMappings: Record<string, string> = {
+      'restaurant': 'interesting_places',
+      'cafe': 'interesting_places',
+      'bar': 'interesting_places',
+      'shopping': 'interesting_places',
+      'entertainment': 'interesting_places,cultural,theatres',
+      'health & fitness': 'interesting_places',
+      'services': 'interesting_places',
+      'lodging': 'interesting_places',
+      'other': 'interesting_places'
+    };
+    
+    return categoryMappings[category.toLowerCase()] || 'interesting_places';
+  }
+
   async searchNearby(lat: number, lng: number, radius: number, type?: string): Promise<Place[]> {
     // Use OpenTripMap API for nearby places
     const apiKey = process.env.OPENTRIPMAP_API_KEY || '5ae2e3f221c38a28845f05b6b8bfcc6aa8e8c6569e7d42adbb3ddbf5';
@@ -19,7 +36,9 @@ export class PlacesService {
       apikey: apiKey
     };
     if (type && typeof type === 'string' && type.trim() !== '') {
-      paramsObj.kinds = type;
+      // Map frontend category to valid OpenTripMap kinds
+      const mappedKinds = this.mapCategoryToOtmKinds(type);
+      paramsObj.kinds = mappedKinds;
     }
     const params = new URLSearchParams(paramsObj);
     const requestUrl = `${baseUrl}?${params}`;
