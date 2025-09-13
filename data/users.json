@@ -19,5 +19,26 @@
     "password": "$2b$10$BZ7sM9eLUui4eouadIeED.KGhsJt0WYVPDJqmK7FDAfBbW6TzJZ9u",
     "name": "John Doe",
     "createdAt": "2025-09-13T11:08:26.282Z"
+  },
+  {
+    "id": "37b20df7-58a4-4a4b-a9ef-60c7ac721f5a",
+    "email": "testuser_1P3SeM@example.com",
+    "password": "$2b$10$SLAutZLVYgpi92zPodM/quTH14.5QuIzV64/VcqYsodXuwU5NQSki",
+    "name": "FinDora Tester",
+    "createdAt": "2025-09-13T11:44:06.338Z"
+  },
+  {
+    "email": "findoratestBXh41K@example.com",
+    "password": "$2b$10$pv0At3kqoazg7KYrLIAnr.qoSaDFDwbo6AAL5JKgqChoeMEeQf2UO",
+    "name": "FindOra Tester",
+    "id": "43b460f4-70f3-4d0c-84b7-a22dbb1b3593",
+    "createdAt": "2025-09-13T11:50:09.666Z"
+  },
+  {
+    "email": "test@example.com",
+    "password": "$2b$10$IRcB5uZJytAGVdTWG3.AKugiQmlqhtZPrqd155ROousQcDI2sjiFq",
+    "name": "Test User",
+    "id": "0da9db74-2ab6-4d64-bc83-a518b2c02cd3",
+    "createdAt": "2025-09-13T11:57:57.719Z"
   }
 ]

@@ -54,7 +54,18 @@ export class PlacesService {
     const data = await response.json();
     
     if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
-      throw new Error(`Google Places API error: ${data.status}`);
+      let errorMessage = `Google Places API error: ${data.status}`;
+      
+      if (data.status === 'REQUEST_DENIED') {
+        errorMessage += ' - Please check: (1) Google Places API is enabled in Google Cloud Console, (2) API key has Places API permissions, (3) Billing is enabled';
+      }
+      
+      console.error('Google Places API Error:', {
+        status: data.status,
+        errorMessage: data.error_message || 'No additional details'
+      });
+      
+      throw new Error(errorMessage);
     }
 
     return data.results.map((place: GooglePlace) => this.convertGooglePlace(place));
@@ -80,7 +91,18 @@ export class PlacesService {
     const data = await response.json();
     
     if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
-      throw new Error(`Google Places API error: ${data.status}`);
+      let errorMessage = `Google Places API error: ${data.status}`;
+      
+      if (data.status === 'REQUEST_DENIED') {
+        errorMessage += ' - Please check: (1) Google Places API is enabled in Google Cloud Console, (2) API key has Places API permissions, (3) Billing is enabled';
+      }
+      
+      console.error('Google Places API Error:', {
+        status: data.status,
+        errorMessage: data.error_message || 'No additional details'
+      });
+      
+      throw new Error(errorMessage);
     }
 
     return data.results.map((place: GooglePlace) => this.convertGooglePlace(place));

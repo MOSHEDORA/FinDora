@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage, initializeStorage } from "./storage";
 import { authService } from "./services/auth";
 import { placesService } from "./services/places";
 import { aiService } from "./services/ai";
@@ -30,6 +30,9 @@ const authenticateToken = async (req: any, res: any, next: any) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Initialize storage before handling any requests
+  await initializeStorage();
+
   // Auth routes
   app.post("/api/auth/register", async (req, res, next) => {
     try {

@@ -22,12 +22,22 @@ export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private searchHistory: Map<string, SearchHistory[]>;
   private placesCache: Map<string, Place[]>;
+  private isInitialized: boolean = false;
+  private initPromise: Promise<void> | null = null;
 
   constructor() {
     this.users = new Map();
     this.searchHistory = new Map();
     this.placesCache = new Map();
-    this.loadFromFiles();
+  }
+
+  async initialize(): Promise<void> {
+    if (this.isInitialized) return;
+    if (this.initPromise) return this.initPromise;
+    
+    this.initPromise = this.loadFromFiles();
+    await this.initPromise;
+    this.isInitialized = true;
   }
 
   private async loadFromFiles() {
@@ -118,4 +128,6 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+const memStorage = new MemStorage();
+export const storage = memStorage;
+export const initializeStorage = () => memStorage.initialize();
