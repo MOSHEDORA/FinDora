@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,12 @@ export default function Home() {
   const [filters, setFilters] = useState<PlaceFilters>({ sortBy: 'distance' });
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [showPlaceDetails, setShowPlaceDetails] = useState(false);
+  
+  // Stable click handler to prevent Map markers from being recreated
+  const handlePlaceSelect = useCallback((place: Place) => {
+    setSelectedPlace(place);
+    setShowPlaceDetails(true);
+  }, []);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [user, setUser] = useState(authStorage.getUser());
 
@@ -399,10 +405,7 @@ export default function Home() {
               <Map
                 center={location}
                 places={places}
-                onPlaceSelect={(place) => {
-                  setSelectedPlace(place);
-                  setShowPlaceDetails(true);
-                }}
+                onPlaceSelect={handlePlaceSelect}
                 className="h-full"
               />
             ) : (
@@ -488,10 +491,7 @@ export default function Home() {
                     key={place.id}
                     place={place}
                     distance={location ? calculateDistance(location, place) : undefined}
-                    onSelect={(place) => {
-                      setSelectedPlace(place);
-                      setShowPlaceDetails(true);
-                    }}
+                    onSelect={handlePlaceSelect}
                   />
                 ))
               )}
@@ -544,13 +544,15 @@ export default function Home() {
         </div>
       )}
 
-      {/* Place Details Dialog */}
-      <PlaceDetails
-        place={selectedPlace}
-        isOpen={showPlaceDetails}
-        onClose={() => setShowPlaceDetails(false)}
-        distance={selectedPlace && location ? calculateDistance(location, selectedPlace) : undefined}
-      />
+      {/* Place Details Dialog - Only render when both open and place selected */}
+      {showPlaceDetails && selectedPlace && (
+        <PlaceDetails
+          place={selectedPlace}
+          isOpen={showPlaceDetails}
+          onClose={() => setShowPlaceDetails(false)}
+          distance={location ? calculateDistance(location, selectedPlace) : undefined}
+        />
+      )}
     </div>
   );
 }

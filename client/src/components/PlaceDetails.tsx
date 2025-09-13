@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -74,6 +74,9 @@ export function PlaceDetails({ place, isOpen, onClose, distance }: PlaceDetailsP
               </Button>
             </DialogClose>
           </div>
+          <DialogDescription>
+            Detailed information about {place.name}
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">

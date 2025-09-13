@@ -23,6 +23,12 @@ export function Map({ center, places, onPlaceSelect, className = "h-full" }: Map
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
+  const onPlaceSelectRef = useRef(onPlaceSelect);
+  
+  // Update ref when onPlaceSelect changes
+  useEffect(() => {
+    onPlaceSelectRef.current = onPlaceSelect;
+  }, [onPlaceSelect]);
 
   // Initialize map
   useEffect(() => {
@@ -151,12 +157,12 @@ export function Map({ center, places, onPlaceSelect, className = "h-full" }: Map
       });
 
       marker.on('click', () => {
-        onPlaceSelect?.(place);
+        onPlaceSelectRef.current?.(place);
       });
 
       markersRef.current.push(marker);
     });
-  }, [places, center, onPlaceSelect]);
+  }, [places, center]);
 
   return (
     <div className={className}>
