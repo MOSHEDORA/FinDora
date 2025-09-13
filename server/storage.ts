@@ -77,7 +77,8 @@ export class MemStorage implements IStorage {
       ...history,
       id,
       userId,
-      timestamp: new Date()
+      timestamp: new Date(),
+      filters: history.filters || null
     };
 
     const userHistory = this.searchHistory.get(userId) || [];

@@ -53,7 +53,7 @@ export default function Home() {
   }, [user, navigate]);
 
   // Search history query
-  const { data: searchHistoryData } = useQuery({
+  const { data: searchHistoryData } = useQuery<{ history: SearchHistory[] }>({
     queryKey: ['/api/search-history'],
     enabled: !!user,
   });
@@ -73,8 +73,9 @@ export default function Home() {
         params.append('type', filters.category.toLowerCase());
       }
 
+      const authHeaders = getAuthHeaders();
       const response = await fetch(`/api/places/nearby?${params}`, {
-        headers: getAuthHeaders(),
+        headers: authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {},
       });
       
       if (!response.ok) {
@@ -260,7 +261,7 @@ export default function Home() {
       <div className="p-4 flex-1 overflow-y-auto">
         <h3 className="font-semibold mb-3">Recent Searches</h3>
         <div className="space-y-2">
-          {searchHistoryData?.history?.length > 0 ? (
+          {searchHistoryData?.history && searchHistoryData.history.length > 0 ? (
             searchHistoryData.history.slice(0, 10).map((history: SearchHistory) => (
               <div
                 key={history.id}
@@ -271,8 +272,7 @@ export default function Home() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{history.query}</p>
                   <p className="text-xs text-muted-foreground">
-                    {new Date(history.timestamp).toRelativeTimeString?.() || 
-                     new Date(history.timestamp).toLocaleDateString()}
+                    {history.timestamp ? new Date(history.timestamp).toLocaleDateString() : 'Unknown date'}
                   </p>
                 </div>
                 <Button
