@@ -65,27 +65,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/places/nearby", authenticateToken, async (req: any, res, next) => {
     try {
       const { lat, lng, radius = 2000, type } = req.query;
-      
-      if (!lat || !lng) {
-        return res.status(400).json({ message: 'Latitude and longitude are required' });
+      // Validate latitude and longitude
+      const latitude = Number(lat);
+      const longitude = Number(lng);
+      const searchRadius = Number(radius);
+      if (
+        isNaN(latitude) ||
+        isNaN(longitude) ||
+        Math.abs(latitude) > 90 ||
+        Math.abs(longitude) > 180 ||
+        isNaN(searchRadius) ||
+        searchRadius < 1 || searchRadius > 50000
+      ) {
+        return res.status(400).json({ message: 'Invalid latitude, longitude, or radius' });
       }
 
-      const latitude = parseFloat(lat as string);
-      const longitude = parseFloat(lng as string);
-      const searchRadius = parseInt(radius as string);
+      // Only allow valid OpenTripMap kinds or omit
+      let otmType = typeof type === 'string' && /^[a-zA-Z0-9_,-]*$/.test(type) ? type : '';
 
       // Check cache first
-      const cacheKey = `nearby_${latitude}_${longitude}_${searchRadius}_${type || 'all'}`;
+      const cacheKey = `nearby_${latitude}_${longitude}_${searchRadius}_${otmType || 'all'}`;
       let places = await storage.getCachedPlaces(cacheKey);
 
       if (!places) {
-        // Fetch from Google Places API
-        places = await placesService.searchNearby(latitude, longitude, searchRadius, type as string);
-        
-        // Categorize with AI
+        places = await placesService.searchNearby(latitude, longitude, searchRadius, otmType);
         places = await aiService.categorizePlaces(places);
-        
-        // Cache results
         await storage.setCachedPlaces(cacheKey, places);
       }
 
