@@ -32,8 +32,6 @@ export class PlacesService {
     // Clean the API key - remove whitespace and decode if needed
     apiKey = apiKey.trim();
     
-    // Debug: Check API key format (first few characters only for security)
-    console.log('[OpenTripMap Debug] API key format check:', apiKey.substring(0, 8) + '...', 'length:', apiKey.length);
     
     // Validate API key format - should be alphanumeric and reasonable length
     if (apiKey.length < 10 || apiKey.length > 100) {

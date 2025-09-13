@@ -15,6 +15,7 @@ import { Map } from "@/components/Map";
 import { PlaceCard } from "@/components/PlaceCard";
 import { SearchFilters } from "@/components/SearchFilters";
 import { LocationInput } from "@/components/LocationInput";
+import { PlaceDetails } from "@/components/PlaceDetails";
 import { Place, SearchHistory } from "@shared/schema";
 import { Location, PlaceFilters } from "@/lib/types";
 import { 
@@ -41,6 +42,7 @@ export default function Home() {
   const [radius, setRadius] = useState(2000);
   const [filters, setFilters] = useState<PlaceFilters>({ sortBy: 'distance' });
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [showPlaceDetails, setShowPlaceDetails] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [user, setUser] = useState(authStorage.getUser());
 
@@ -397,7 +399,10 @@ export default function Home() {
               <Map
                 center={location}
                 places={places}
-                onPlaceSelect={setSelectedPlace}
+                onPlaceSelect={(place) => {
+                  setSelectedPlace(place);
+                  setShowPlaceDetails(true);
+                }}
                 className="h-full"
               />
             ) : (
@@ -483,7 +488,10 @@ export default function Home() {
                     key={place.id}
                     place={place}
                     distance={location ? calculateDistance(location, place) : undefined}
-                    onSelect={setSelectedPlace}
+                    onSelect={(place) => {
+                      setSelectedPlace(place);
+                      setShowPlaceDetails(true);
+                    }}
                   />
                 ))
               )}
@@ -535,6 +543,14 @@ export default function Home() {
           </Sheet>
         </div>
       )}
+
+      {/* Place Details Dialog */}
+      <PlaceDetails
+        place={selectedPlace}
+        isOpen={showPlaceDetails}
+        onClose={() => setShowPlaceDetails(false)}
+        distance={selectedPlace && location ? calculateDistance(location, selectedPlace) : undefined}
+      />
     </div>
   );
 }

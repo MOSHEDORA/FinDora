@@ -111,11 +111,26 @@ export function Map({ center, places, onPlaceSelect, className = "h-full" }: Map
         .bindPopup(`
           <div style="min-width: 200px;">
             <h3 style="margin: 0 0 8px 0; font-weight: 600;">${place.name}</h3>
-            <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${place.aiCategory || place.category}</p>
-            ${place.rating ? `<p style="margin: 0 0 4px 0; font-size: 14px;">⭐ ${place.rating}</p>` : ''}
-            ${place.address ? `<p style="margin: 0; color: #666; font-size: 12px;">${place.address}</p>` : ''}
+            <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${place.aiCategory || place.category || 'Data Not Available'}</p>
+            ${place.rating ? `<p style="margin: 0 0 4px 0; font-size: 14px;">⭐ ${place.rating}</p>` : '<p style="margin: 0 0 4px 0; font-size: 14px; color: #999;">Rating: Data Not Available</p>'}
+            ${place.address ? `<p style="margin: 0; color: #666; font-size: 12px;">${place.address}</p>` : '<p style="margin: 0; color: #999; font-size: 12px;">Address: Data Not Available</p>'}
           </div>
-        `);
+        `)
+        .bindTooltip(place.name, {
+          permanent: false,
+          direction: 'top',
+          offset: [0, -10],
+          className: 'place-tooltip'
+        });
+
+      // Show tooltip on hover
+      marker.on('mouseover', () => {
+        marker.openTooltip();
+      });
+
+      marker.on('mouseout', () => {
+        marker.closeTooltip();
+      });
 
       marker.on('click', () => {
         onPlaceSelect?.(place);

@@ -58,9 +58,11 @@ export function PlaceCard({ place, distance, onSelect }: PlaceCardProps) {
           </div>
           
           <p className="text-sm text-muted-foreground mb-2" data-testid={`text-category-${place.id}`}>
-            {place.aiCategory || place.category}
-            {place.priceLevel && (
+            {place.aiCategory || place.category || 'Category: Data Not Available'}
+            {place.priceLevel ? (
               <span className="ml-2">• {renderPriceLevel(place.priceLevel)}</span>
+            ) : (
+              <span className="ml-2 text-gray-400">• Price: Data Not Available</span>
             )}
           </p>
           
