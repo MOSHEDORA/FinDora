@@ -28,6 +28,9 @@ export class PlacesService {
     if (!apiKey) {
       throw new Error('OpenTripMap API key is required. Please set OPENTRIPMAP_API_KEY environment variable (free API key available from opentripmap.org)');
     }
+    
+    // Debug: Check API key format (first few characters only for security)
+    console.log('[OpenTripMap Debug] API key format check:', apiKey.substring(0, 8) + '...', 'length:', apiKey.length);
     const baseUrl = 'https://api.opentripmap.com/0.1/en/places/radius';
     const paramsObj: Record<string, string> = {
       radius: radius.toString(),
