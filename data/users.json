@@ -5,5 +5,19 @@
     "password": "$2b$10$oKekqWbUVSPEZpzYzC2HW.UN/LheGGzdR0cW3mnzwij2eP13K5gbi",
     "name": "VENKANNA DORA",
     "createdAt": "2025-09-13T10:52:04.585Z"
+  },
+  {
+    "id": "42280e3b-9498-4b77-9636-2c35e4e456eb",
+    "email": "",
+    "password": "$2b$10$UkB5OcypHq8vN907Pux89eM/giOwOqz0WeS0EjogYxjU.Yly//miC",
+    "name": "",
+    "createdAt": "2025-09-13T11:01:33.053Z"
+  },
+  {
+    "id": "2b52dd6f-d5c4-40cd-b16d-d8186ea16f74",
+    "email": "john.doe@example.com",
+    "password": "$2b$10$BZ7sM9eLUui4eouadIeED.KGhsJt0WYVPDJqmK7FDAfBbW6TzJZ9u",
+    "name": "John Doe",
+    "createdAt": "2025-09-13T11:08:26.282Z"
   }
 ]

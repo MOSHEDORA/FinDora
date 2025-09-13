@@ -42,8 +42,18 @@ export default function Home() {
   const [filters, setFilters] = useState<PlaceFilters>({ sortBy: 'distance' });
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [user, setUser] = useState(authStorage.getUser());
 
-  const user = authStorage.getUser();
+  // Sync user state with localStorage changes
+  useEffect(() => {
+    const syncUser = () => {
+      setUser(authStorage.getUser());
+    };
+    
+    // Listen for storage changes
+    window.addEventListener('storage', syncUser);
+    return () => window.removeEventListener('storage', syncUser);
+  }, []);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -162,6 +172,7 @@ export default function Home() {
 
   const handleLogout = () => {
     authStorage.clear();
+    setUser(null);
     navigate("/login");
   };
 
