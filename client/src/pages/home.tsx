@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { authStorage, getAuthHeaders } from "@/lib/auth";
@@ -397,120 +398,133 @@ export default function Home() {
           </div>
         )}
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-          {/* Map */}
-          <div className="flex-1 relative">
-            {location ? (
-              <Map
-                center={location}
-                places={places}
-                onPlaceSelect={handlePlaceSelect}
-                className="h-full"
-              />
-            ) : (
-              <div className="h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <div className="text-center text-white">
-                  <MapPin className="h-16 w-16 mx-auto mb-4 opacity-80" />
-                  <p className="text-xl font-medium">Set your location to start discovering</p>
-                  <p className="text-sm opacity-80 mt-2">Use the sidebar to enter your location</p>
-                </div>
-              </div>
-            )}
-          </div>
+        {/* Main Content Area with Tabs */}
+        <div className="flex-1 overflow-hidden">
+          <Tabs defaultValue="places" className="h-full flex flex-col">
+            <div className="border-b border-border px-4 pt-2">
+              <TabsList className="grid w-48 grid-cols-2">
+                <TabsTrigger value="places" data-testid="tab-places">Places</TabsTrigger>
+                <TabsTrigger value="map" data-testid="tab-map">Map</TabsTrigger>
+              </TabsList>
+            </div>
 
-          {/* Places List */}
-          <div className="w-full md:w-96 bg-card border-l border-border overflow-y-auto">
-            <div className="p-4 border-b border-border">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold">Found Places</h3>
-                <span className="text-sm text-muted-foreground" data-testid="text-places-count">
-                  {places.length} results
-                </span>
-              </div>
-
-              {isMobile && (
-                <div className="flex space-x-2 mb-3">
-                  <div className="relative flex-1">
-                    <Input
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search places..."
-                      className="pl-10"
-                      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                      data-testid="input-search-mobile"
-                    />
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <Button onClick={handleSearch} disabled={searchMutation.isPending} data-testid="button-search-mobile">
-                    <Search className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
-
-              {(placesLoading || searchMutation.isPending) && (
-                <div className="bg-muted p-3 rounded-md mb-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
-                    <span className="text-sm">
-                      {searchMutation.isPending ? "Searching places..." : "Loading places..."}
+            {/* Places Tab */}
+            <TabsContent value="places" className="flex-1 overflow-hidden mt-0">
+              <div className="h-full bg-card overflow-y-auto">
+                <div className="p-4 border-b border-border">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold">Found Places</h3>
+                    <span className="text-sm text-muted-foreground" data-testid="text-places-count">
+                      {places.length} results
                     </span>
                   </div>
+
+                  {isMobile && (
+                    <div className="flex space-x-2 mb-3">
+                      <div className="relative flex-1">
+                        <Input
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          placeholder="Search places..."
+                          className="pl-10"
+                          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                          data-testid="input-search-mobile"
+                        />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      </div>
+                      <Button onClick={handleSearch} disabled={searchMutation.isPending} data-testid="button-search-mobile">
+                        <Search className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+
+                  {(placesLoading || searchMutation.isPending) && (
+                    <div className="bg-muted p-3 rounded-md mb-3">
+                      <div className="flex items-center space-x-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
+                        <span className="text-sm">
+                          {searchMutation.isPending ? "Searching places..." : "Loading places..."}
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <div className="p-4 space-y-4">
-              {placesError ? (
-                <Card>
-                  <CardContent className="p-4 text-center">
-                    <p className="text-destructive">Failed to load places</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2"
-                      onClick={() => queryClient.invalidateQueries({ queryKey: ['/api/places/nearby'] })}
-                      data-testid="button-retry"
-                    >
-                      <RotateCcw className="h-4 w-4 mr-2" />
-                      Retry
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : places.length === 0 && !placesLoading ? (
-                <Card>
-                  <CardContent className="p-4 text-center">
-                    <p className="text-muted-foreground">
-                      {location ? "No places found in this area" : "Set your location to find places"}
-                    </p>
-                  </CardContent>
-                </Card>
-              ) : (
-                places.map((place) => (
-                  <PlaceCard
-                    key={place.id}
-                    place={place}
-                    distance={location ? calculateDistance(location, place) : undefined}
-                    onSelect={handlePlaceSelect}
-                  />
-                ))
-              )}
-
-              {placesLoading && (
-                <div className="space-y-4">
-                  {[...Array(3)].map((_, i) => (
-                    <Card key={i}>
-                      <CardContent className="p-4">
-                        <Skeleton className="h-32 w-full mb-4" />
-                        <Skeleton className="h-4 w-3/4 mb-2" />
-                        <Skeleton className="h-3 w-1/2" />
+                <div className="p-4 space-y-4">
+                  {placesError ? (
+                    <Card>
+                      <CardContent className="p-4 text-center">
+                        <p className="text-destructive">Failed to load places</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => queryClient.invalidateQueries({ queryKey: ['/api/places/nearby'] })}
+                          data-testid="button-retry"
+                        >
+                          <RotateCcw className="h-4 w-4 mr-2" />
+                          Retry
+                        </Button>
                       </CardContent>
                     </Card>
-                  ))}
+                  ) : places.length === 0 && !placesLoading ? (
+                    <Card>
+                      <CardContent className="p-4 text-center">
+                        <p className="text-muted-foreground">
+                          {location ? "No places found in this area" : "Set your location to find places"}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    places.map((place) => (
+                      <PlaceCard
+                        key={place.id}
+                        place={place}
+                        distance={location ? calculateDistance(location, place) : undefined}
+                        onSelect={handlePlaceSelect}
+                      />
+                    ))
+                  )}
+
+                  {placesLoading && (
+                    <div className="space-y-4">
+                      {[...Array(3)].map((_, i) => (
+                        <Card key={i}>
+                          <CardContent className="p-4">
+                            <Skeleton className="h-32 w-full mb-4" />
+                            <Skeleton className="h-4 w-3/4 mb-2" />
+                            <Skeleton className="h-3 w-1/2" />
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
+            </TabsContent>
+
+            {/* Map Tab */}
+            <TabsContent value="map" className="flex-1 overflow-hidden mt-0">
+              <div className="h-full relative">
+                {location ? (
+                  <Map
+                    center={location}
+                    places={places}
+                    onPlaceSelect={handlePlaceSelect}
+                    className="h-full"
+                  />
+                ) : (
+                  <div className="h-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <MapPin className="h-16 w-16 mx-auto mb-4 opacity-80" />
+                      <p className="text-xl font-medium">Set your location to start discovering</p>
+                      <p className="text-sm opacity-80 mt-2">Use the sidebar to enter your location</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
 
