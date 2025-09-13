@@ -24,13 +24,21 @@ export class PlacesService {
 
   async searchNearby(lat: number, lng: number, radius: number, type?: string): Promise<Place[]> {
     // Use OpenTripMap API for nearby places
-    const apiKey = process.env.OPENTRIPMAP_API_KEY;
+    let apiKey = process.env.OPENTRIPMAP_API_KEY;
     if (!apiKey) {
       throw new Error('OpenTripMap API key is required. Please set OPENTRIPMAP_API_KEY environment variable (free API key available from opentripmap.org)');
     }
     
+    // Clean the API key - remove whitespace and decode if needed
+    apiKey = apiKey.trim();
+    
     // Debug: Check API key format (first few characters only for security)
     console.log('[OpenTripMap Debug] API key format check:', apiKey.substring(0, 8) + '...', 'length:', apiKey.length);
+    
+    // Validate API key format - should be alphanumeric and reasonable length
+    if (apiKey.length < 10 || apiKey.length > 100) {
+      throw new Error(`Invalid OpenTripMap API key format. Expected 10-100 characters, got ${apiKey.length}. Please check your OPENTRIPMAP_API_KEY environment variable.`);
+    }
     const baseUrl = 'https://api.opentripmap.com/0.1/en/places/radius';
     const paramsObj: Record<string, string> = {
       radius: radius.toString(),
