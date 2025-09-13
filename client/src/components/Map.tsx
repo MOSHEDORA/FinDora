@@ -106,16 +106,34 @@ export function Map({ center, places, onPlaceSelect, className = "h-full" }: Map
         iconAnchor: [8, 8]
       });
 
+      // Create popup content safely to prevent XSS
+      const popupDiv = document.createElement('div');
+      popupDiv.style.minWidth = '200px';
+      
+      const nameHeader = document.createElement('h3');
+      nameHeader.style.cssText = 'margin: 0 0 8px 0; font-weight: 600;';
+      nameHeader.textContent = place.name;
+      
+      const categoryP = document.createElement('p');
+      categoryP.style.cssText = 'margin: 0 0 4px 0; color: #666; font-size: 14px;';
+      categoryP.textContent = place.aiCategory || place.category || 'Data Not Available';
+      
+      const ratingP = document.createElement('p');
+      ratingP.style.cssText = place.rating ? 'margin: 0 0 4px 0; font-size: 14px;' : 'margin: 0 0 4px 0; font-size: 14px; color: #999;';
+      ratingP.textContent = place.rating ? `⭐ ${place.rating}` : 'Rating: Data Not Available';
+      
+      const addressP = document.createElement('p');
+      addressP.style.cssText = place.address ? 'margin: 0; color: #666; font-size: 12px;' : 'margin: 0; color: #999; font-size: 12px;';
+      addressP.textContent = place.address || 'Address: Data Not Available';
+      
+      popupDiv.appendChild(nameHeader);
+      popupDiv.appendChild(categoryP);
+      popupDiv.appendChild(ratingP);
+      popupDiv.appendChild(addressP);
+
       const marker = L.marker([lat, lng], { icon: placeIcon })
         .addTo(map)
-        .bindPopup(`
-          <div style="min-width: 200px;">
-            <h3 style="margin: 0 0 8px 0; font-weight: 600;">${place.name}</h3>
-            <p style="margin: 0 0 4px 0; color: #666; font-size: 14px;">${place.aiCategory || place.category || 'Data Not Available'}</p>
-            ${place.rating ? `<p style="margin: 0 0 4px 0; font-size: 14px;">⭐ ${place.rating}</p>` : '<p style="margin: 0 0 4px 0; font-size: 14px; color: #999;">Rating: Data Not Available</p>'}
-            ${place.address ? `<p style="margin: 0; color: #666; font-size: 12px;">${place.address}</p>` : '<p style="margin: 0; color: #999; font-size: 12px;">Address: Data Not Available</p>'}
-          </div>
-        `)
+        .bindPopup(popupDiv)
         .bindTooltip(place.name, {
           permanent: false,
           direction: 'top',

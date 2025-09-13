@@ -75,7 +75,7 @@ export function PlaceCard({ place, distance, onSelect }: PlaceCardProps) {
                 </span>
               </div>
             )}
-            {place.isOpen !== null && (
+            {typeof place.isOpen === 'boolean' && (
               <div className="flex items-center space-x-1">
                 <Clock className="h-3 w-3" />
                 <span className={place.isOpen ? "text-green-600" : "text-red-600"}>

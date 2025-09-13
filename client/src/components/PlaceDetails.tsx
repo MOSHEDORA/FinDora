@@ -136,7 +136,7 @@ export function PlaceDetails({ place, isOpen, onClose, distance }: PlaceDetailsP
               <DataRow 
                 icon={Clock} 
                 label="Status" 
-                value={place.isOpen !== null ? (place.isOpen ? "Open" : "Closed") : null}
+                value={typeof place.isOpen === 'boolean' ? (place.isOpen ? "Open" : "Closed") : null}
               />
               
               <DataRow 
