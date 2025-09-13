@@ -10,7 +10,7 @@ interface OpenRouterResponse {
 }
 
 export class AIService {
-  private apiKey: string;
+  private apiKey?: string;
 
   constructor() {
     this.apiKey = config.openRouterApiKey;
@@ -19,7 +19,8 @@ export class AIService {
 
   async categorizePlace(place: Place): Promise<{ category: string; tags: string[] }> {
     // If no API key is available, skip AI categorization
-    if (!this.apiKey || this.apiKey.startsWith('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')) {
+    if (!this.apiKey) {
+      console.warn('[AI Service] OpenRouter API key not configured - skipping AI categorization');
       return {
         category: place.category || 'Other',
         tags: []

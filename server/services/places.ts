@@ -8,14 +8,14 @@ export class PlacesService {
   // Map frontend categories to valid OpenTripMap kinds
   private mapCategoryToOtmKinds(category: string): string {
     const categoryMappings: Record<string, string> = {
-      'restaurant': 'interesting_places',
-      'cafe': 'interesting_places',
-      'bar': 'interesting_places',
-      'shopping': 'interesting_places',
-      'entertainment': 'interesting_places,cultural,theatres',
-      'health & fitness': 'interesting_places',
-      'services': 'interesting_places',
-      'lodging': 'interesting_places',
+      'restaurant': 'foods',
+      'cafe': 'foods',
+      'bar': 'foods',
+      'shopping': 'shops',
+      'entertainment': 'entertainment,amusements,cultural,theatres',
+      'health & fitness': 'sport',
+      'services': 'commercial',
+      'lodging': 'accomodations',
       'other': 'interesting_places'
     };
     
@@ -24,9 +24,9 @@ export class PlacesService {
 
   async searchNearby(lat: number, lng: number, radius: number, type?: string): Promise<Place[]> {
     // Use OpenTripMap API for nearby places
-    const apiKey = process.env.OPENTRIPMAP_API_KEY || '5ae2e3f221c38a28845f05b6b8bfcc6aa8e8c6569e7d42adbb3ddbf5';
+    const apiKey = process.env.OPENTRIPMAP_API_KEY;
     if (!apiKey) {
-      throw new Error('OpenTripMap API key is required (free, get from opentipmap.org)');
+      throw new Error('OpenTripMap API key is required. Please set OPENTRIPMAP_API_KEY environment variable (free API key available from opentripmap.org)');
     }
     const baseUrl = 'https://api.opentripmap.com/0.1/en/places/radius';
     const paramsObj: Record<string, string> = {
@@ -42,7 +42,11 @@ export class PlacesService {
     }
     const params = new URLSearchParams(paramsObj);
     const requestUrl = `${baseUrl}?${params}`;
-    console.log('[OpenTripMap Request]', requestUrl);
+    // Log request without exposing API key for security
+    const logParams = { ...paramsObj };
+    delete logParams.apikey;
+    const logUrl = `${baseUrl}?${new URLSearchParams(logParams)}`;
+    console.log('[OpenTripMap Request]', logUrl, '(API key hidden for security)');
     const response = await fetch(requestUrl);
     if (!response.ok) {
       const errorText = await response.text();
