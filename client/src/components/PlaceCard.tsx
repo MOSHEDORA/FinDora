@@ -1,7 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MapPin, Star, Clock, ExternalLink } from "lucide-react";
 import { Place } from "@shared/schema";
+import { searchPlaceOnGoogleMaps } from "@/lib/googleMaps";
 
 interface PlaceCardProps {
   place: Place;
@@ -12,6 +14,11 @@ interface PlaceCardProps {
 export function PlaceCard({ place, distance, onSelect }: PlaceCardProps) {
   const handleClick = () => {
     onSelect?.(place);
+  };
+
+  const handleGoogleMapsSearch = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click
+    searchPlaceOnGoogleMaps(place);
   };
 
   const renderPriceLevel = (level: number | null) => {
@@ -86,7 +93,7 @@ export function PlaceCard({ place, distance, onSelect }: PlaceCardProps) {
           </div>
           
           {place.aiTags && place.aiTags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 mb-3">
               {place.aiTags.slice(0, 3).map((tag, index) => (
                 <Badge 
                   key={index} 
@@ -99,6 +106,20 @@ export function PlaceCard({ place, distance, onSelect }: PlaceCardProps) {
               ))}
             </div>
           )}
+          
+          {/* Google Maps Search Button */}
+          <div className="pt-2 border-t border-border">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-xs"
+              onClick={handleGoogleMapsSearch}
+              data-testid={`button-google-maps-${place.id}`}
+            >
+              <ExternalLink className="h-3 w-3 mr-1" />
+              Search on Google Maps
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -14,9 +14,12 @@ import {
   Menu as MenuIcon,
   X,
   Navigation,
-  Info
+  Info,
+  ExternalLink,
+  Car
 } from "lucide-react";
 import { Place } from "@shared/schema";
+import { searchPlaceOnGoogleMaps, getDirectionsOnGoogleMaps, viewPlaceOnGoogleMaps } from "@/lib/googleMaps";
 
 interface PlaceDetailsProps {
   place: Place | null;
@@ -31,6 +34,18 @@ export function PlaceDetails({ place, isOpen, onClose, distance }: PlaceDetailsP
   const formatDistance = (dist?: number) => {
     if (!dist) return null;
     return dist < 1000 ? `${Math.round(dist)}m` : `${(dist / 1000).toFixed(1)}km`;
+  };
+
+  const handleSearchOnGoogleMaps = () => {
+    searchPlaceOnGoogleMaps(place);
+  };
+
+  const handleGetDirections = () => {
+    getDirectionsOnGoogleMaps(place);
+  };
+
+  const handleViewOnGoogleMaps = () => {
+    viewPlaceOnGoogleMaps(place);
   };
 
   const renderPriceLevel = (level: number | null) => {
@@ -105,6 +120,55 @@ export function PlaceDetails({ place, isOpen, onClose, distance }: PlaceDetailsP
               )}
             </div>
           </div>
+
+          {/* Google Maps Integration */}
+          <Card className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center space-x-2">
+                <ExternalLink className="h-5 w-5 text-blue-600" />
+                <span>Search on Google Maps</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSearchOnGoogleMaps}
+                  className="w-full"
+                  data-testid="button-search-google-maps"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Search Place
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleViewOnGoogleMaps}
+                  className="w-full"
+                  data-testid="button-view-google-maps"
+                >
+                  <MapPin className="h-4 w-4 mr-2" />
+                  View on Maps
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGetDirections}
+                  className="w-full"
+                  data-testid="button-directions-google-maps"
+                >
+                  <Car className="h-4 w-4 mr-2" />
+                  Get Directions
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-3 text-center">
+                These links will open Google Maps in a new tab for enhanced place information and navigation.
+              </p>
+            </CardContent>
+          </Card>
 
           <Separator />
 

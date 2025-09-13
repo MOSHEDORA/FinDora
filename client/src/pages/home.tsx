@@ -27,8 +27,10 @@ import {
   RotateCcw,
   X,
   LogOut,
-  MapPin
+  MapPin,
+  ExternalLink
 } from "lucide-react";
+import { getGoogleMapsPlaceUrl, openGoogleMaps } from "@/lib/googleMaps";
 
 export default function Home() {
   const [, navigate] = useLocation();
@@ -183,6 +185,19 @@ export default function Home() {
     authStorage.clear();
     setUser(null);
     navigate("/login");
+  };
+
+  const handleGoogleMapsSearch = () => {
+    if (!searchQuery.trim()) {
+      toast({
+        title: "Enter search query",
+        description: "Please enter a search term to search on Google Maps.",
+      });
+      return;
+    }
+
+    const url = getGoogleMapsPlaceUrl(searchQuery, location || undefined);
+    openGoogleMaps(url);
   };
 
   const sortPlaces = (places: Place[]): Place[] => {
@@ -342,16 +357,27 @@ export default function Home() {
 
         <div className="flex items-center space-x-4">
           {!isMobile && (
-            <div className="relative">
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search places..."
-                className="pl-10 pr-4 w-64"
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                data-testid="input-search"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className="flex items-center space-x-2">
+              <div className="relative">
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search places..."
+                  className="pl-10 pr-4 w-64"
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  data-testid="input-search"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleGoogleMapsSearch}
+                title="Search on Google Maps"
+                data-testid="button-google-maps-search"
+              >
+                <ExternalLink className="h-4 w-4" />
+              </Button>
             </div>
           )}
 
@@ -420,20 +446,32 @@ export default function Home() {
                   </div>
 
                   {isMobile && (
-                    <div className="flex space-x-2 mb-3">
-                      <div className="relative flex-1">
-                        <Input
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          placeholder="Search places..."
-                          className="pl-10"
-                          onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                          data-testid="input-search-mobile"
-                        />
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <div className="space-y-2 mb-3">
+                      <div className="flex space-x-2">
+                        <div className="relative flex-1">
+                          <Input
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search places..."
+                            className="pl-10"
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                            data-testid="input-search-mobile"
+                          />
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                        </div>
+                        <Button onClick={handleSearch} disabled={searchMutation.isPending} data-testid="button-search-mobile">
+                          <Search className="h-4 w-4" />
+                        </Button>
                       </div>
-                      <Button onClick={handleSearch} disabled={searchMutation.isPending} data-testid="button-search-mobile">
-                        <Search className="h-4 w-4" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleGoogleMapsSearch}
+                        className="w-full"
+                        data-testid="button-google-maps-search-mobile"
+                      >
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        Search on Google Maps
                       </Button>
                     </div>
                   )}
