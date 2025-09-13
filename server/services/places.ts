@@ -1,6 +1,7 @@
 
 
 import { Place } from '@shared/schema';
+import { aiPlacesService } from './aiPlaces';
 
 export class PlacesService {
   constructor() {}
@@ -9,12 +10,12 @@ export class PlacesService {
   private mapCategoryToOtmKinds(category: string): string {
     const categoryMappings: Record<string, string> = {
       'restaurant': 'foods',
-      'cafe': 'foods',
+      'cafe': 'foods', 
       'bar': 'foods',
       'shopping': 'shops',
-      'entertainment': 'entertainment,amusements,cultural,theatres',
+      'entertainment': 'amusements',
       'health & fitness': 'sport',
-      'services': 'commercial',
+      'services': 'other',
       'lodging': 'accomodations',
       'other': 'interesting_places'
     };
@@ -67,7 +68,15 @@ export class PlacesService {
       console.warn('[OpenTripMap Response] No features found', data);
       return [];
     }
-    return data.features.map((feature: any) => this.convertOtmPlace(feature));
+    const places = data.features.map((feature: any) => this.convertOtmPlace(feature));
+    
+    // If a category is specified, use AI to enhance the search results
+    if (type && places.length > 0) {
+      console.log(`[Places Service] Using AI to enhance "${type}" category search`);
+      return await aiPlacesService.enhancedCategorySearch(type, lat, lng, radius, places);
+    }
+    
+    return places;
   }
 
   async searchByText(query: string, lat?: number, lng?: number): Promise<Place[]> {

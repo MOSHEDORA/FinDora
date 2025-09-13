@@ -157,6 +157,7 @@ export function Map({ center, places, onPlaceSelect, className = "h-full" }: Map
       });
 
       marker.on('click', () => {
+        console.log('Map marker clicked for:', place.name);
         onPlaceSelectRef.current?.(place);
       });
 
