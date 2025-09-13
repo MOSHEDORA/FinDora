@@ -11,7 +11,6 @@ interface PlaceCardProps {
 
 export function PlaceCard({ place, distance, onSelect }: PlaceCardProps) {
   const handleClick = () => {
-    console.log('PlaceCard handleClick triggered for:', place.name);
     onSelect?.(place);
   };
 
