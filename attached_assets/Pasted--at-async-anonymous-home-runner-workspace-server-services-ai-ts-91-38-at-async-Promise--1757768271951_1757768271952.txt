@@ -1,0 +1,26 @@
+    at async <anonymous> (/home/runner/workspace/server/services/ai.ts:91:38)
+    at async Promise.all (index 9)
+    at async AIService.categorizePlaces (/home/runner/workspace/server/services/ai.ts:88:31)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:92:18)
+AI categorization error: Error: OpenRouter API error: Unauthorized
+    at AIService.categorizePlace (/home/runner/workspace/server/services/ai.ts:62:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async <anonymous> (/home/runner/workspace/server/services/ai.ts:91:38)
+    at async Promise.all (index 10)
+    at async AIService.categorizePlaces (/home/runner/workspace/server/services/ai.ts:88:31)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:92:18)
+12:47:15 PM [express] GET /api/places/nearby 200 in 1155ms :: {"places":[{"id":"W29124485","name":"Bo…
+[OpenTripMap Request] https://api.opentripmap.com/0.1/en/places/radius?radius=2000&lon=78.35090110794175&lat=17.461021793724665&apikey=5ae2e3f221c38a28845f05b6b8bfcc6aa8e8c6569e7d42adbb3ddbf5&kinds=restaurant
+[OpenTripMap Error] 400 {"error":"Unknown category name: restaurant (400) - The request could not be understood by the server due to malformed syntax"}
+12:47:41 PM [express] GET /api/places/nearby 500 in 515ms :: {"message":"OpenTripMap error: Bad Reque…
+Error: OpenTripMap error: Bad Request
+    at PlacesService.searchNearby (/home/runner/workspace/server/services/places.ts:31:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:91:18)
+[OpenTripMap Request] https://api.opentripmap.com/0.1/en/places/radius?radius=2000&lon=78.35090110794175&lat=17.461021793724665&apikey=5ae2e3f221c38a28845f05b6b8bfcc6aa8e8c6569e7d42adbb3ddbf5&kinds=restaurant
+[OpenTripMap Error] 400 {"error":"Unknown category name: restaurant (400) - The request could not be understood by the server due to malformed syntax"}
+12:47:45 PM [express] GET /api/places/nearby 500 in 152ms :: {"message":"OpenTripMap error: Bad Reque…
+Error: OpenTripMap error: Bad Request
+    at PlacesService.searchNearby (/home/runner/workspace/server/services/places.ts:31:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:91:18)
